@@ -76,6 +76,7 @@ This repository documents the end-to-end implementation of an automated subnet t
 ## 📂 Repository Contents
 
 * [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md): System architecture and network topology.
+* [`docs/ROUTER_CONFIGURATION.md`](docs/ROUTER_CONFIGURATION.md): Sky Broadband Hub (SR213) router, LAN/WAN, and Wi-Fi configuration.
 * [`docs/ESXI_CONFIGURATION.md`](docs/ESXI_CONFIGURATION.md): Step-by-step ESXi vSwitch & vNIC commands.
 * [`docs/TRUENAS_CONFIGURATION.md`](docs/TRUENAS_CONFIGURATION.md): TrueNAS interface, daemon, and systemd deployment.
 * [`docs/DATA_STRUCTURE.md`](docs/DATA_STRUCTURE.md): Log schemas, folder organization, and JSON structure.
