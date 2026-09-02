@@ -74,3 +74,17 @@
 | `Packets_Recv`| Count of inbound packets |
 | `Total_Packets`| Cumulative packet count |
 | `Unique_Peers`| Number of remote IP endpoints communicated with |
+
+---
+
+## 3. Storage Retention & 10GB Quota Policy
+
+To prevent storage pool saturation and maintain high I/O throughput on TrueNAS:
+
+1. **Strict 10GB Ceiling**: Total storage consumed by `/mnt/pool1/network_traffic/` (including `raw_pcaps/`, `devices/`, and `logs/`) is capped at **10 GB** (`10,485,760 KB`).
+2. **Automated Purging Mechanism**:
+   * **PCAP Rotation**: `tcpdump` writes 30-second slices into ring buffers (maximum 50 active raw capture files). PCAP files older than 30 minutes are automatically deleted after flow categorization.
+   * **CSV Line Truncation**: When total disk usage reaches 10GB, all `traffic_log.csv` and `subnet_summary.csv` files are automatically pruned to retain the most recent 2,500 rows while preserving header definitions.
+   * **Daemon Log Rotation**: `monitor.log` is automatically truncated if it exceeds 50MB, preserving the latest 10,000 entries.
+3. **Execution Cadence**: Disk usage and log sizes are verified every 10 seconds during the daemon's continuous capture cycle.
+

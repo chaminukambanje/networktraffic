@@ -359,6 +359,43 @@ def update_device_records(flows, pcap_name):
 
     save_dns_cache()
 
+MAX_STORAGE_BYTES = 10 * 1024 * 1024 * 1024 # 10 GB
+
+def check_and_enforce_retention():
+    try:
+        total_size = 0
+        for root, dirs, files in os.walk(BASE_DIR):
+            for f in files:
+                fp = os.path.join(root, f)
+                try:
+                    total_size += os.path.getsize(fp)
+                except Exception:
+                    pass
+                    
+        if total_size > MAX_STORAGE_BYTES:
+            print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Storage ({total_size / (1024**3):.2f} GB) exceeded 10GB limit. Purging oldest logs & pcaps...")
+            for pcap in glob.glob(os.path.join(RAW_DIR, "*.pcap")):
+                try:
+                    os.remove(pcap)
+                except Exception:
+                    pass
+                    
+            for csv_file in glob.glob(os.path.join(DEVICES_DIR, "*", "*.csv")) + [os.path.join(BASE_DIR, "subnet_summary.csv")]:
+                if os.path.isfile(csv_file):
+                    try:
+                        with open(csv_file, 'r') as f:
+                            lines = f.readlines()
+                        if len(lines) > 5000:
+                            header = lines[0]
+                            kept = lines[-2500:]
+                            with open(csv_file, 'w') as f:
+                                f.write(header)
+                                f.writelines(kept)
+                    except Exception:
+                        pass
+    except Exception as e:
+        print(f"Error enforcing retention: {e}", file=sys.stderr)
+
 def main():
     pcaps = sorted(glob.glob(os.path.join(RAW_DIR, "*.pcap")))
     now = time.time()
@@ -374,6 +411,9 @@ def main():
             os.remove(pcap)
         except Exception as e:
             print(f"Error processing {pcap}: {e}")
+            
+    check_and_enforce_retention()
 
 if __name__ == '__main__':
     main()
+
