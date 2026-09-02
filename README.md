@@ -67,8 +67,10 @@ Enterprise-grade automated network traffic capture, flow inspection, reverse DNS
 
 ## 📂 Documentation & Configuration Map
 
-### 1. Documentation Guides (`docs/`)
+### 1. Documentation Guides (`docs/` & `rebuild/`)
+* [`rebuild/README.md`](rebuild/README.md): **Master Homelab Disaster Recovery & Rebuild Blueprint** (Complete scripts, configs, and multi-phase runbooks).
 * [`docs/DISASTER_RECOVERY.md`](docs/DISASTER_RECOVERY.md): **Bare-Metal Disaster Recovery Runbook** & step-by-step restoration procedures.
+* [`docs/ROUTER_CONFIGURATION.md`](docs/ROUTER_CONFIGURATION.md): Sky Broadband Hub (SR213) router, LAN/WAN, and Wi-Fi configuration.
 * [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md): Network topology, ESXi vSwitch layer, and ingest architecture.
 * [`docs/DEVICE_INVENTORY.md`](docs/DEVICE_INVENTORY.md): Verified online homelab catalog (26 active devices) and pruned stale list.
 * [`docs/ESXI_CONFIGURATION.md`](docs/ESXI_CONFIGURATION.md): Step-by-step ESXi port mirroring, vSwitch, and vNIC commands.
