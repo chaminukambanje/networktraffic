@@ -1,0 +1,13 @@
+[Unit]
+Description=Subnet Network Traffic Capture & Categorization Daemon
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/bin/bash /mnt/pool1/network_traffic/scripts/traffic_daemon.sh
+Restart=always
+RestartSec=10
+User=root
+
+[Install]
+WantedBy=multi-user.target
