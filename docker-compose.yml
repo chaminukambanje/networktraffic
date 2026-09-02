@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  traffic-dashboard:
+    build: .
+    container_name: network-traffic-dashboard
+    restart: unless-stopped
+    ports:
+      - "8500:8500"
+    environment:
+      - PORT=8500
+      - DATA_DIR=/mnt/network_traffic
+    volumes:
+      - /mnt/pool1/network_traffic:/mnt/network_traffic:ro

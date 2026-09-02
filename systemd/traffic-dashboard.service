@@ -1,0 +1,13 @@
+[Unit]
+Description=Subnet & Docker Network Traffic Dashboard
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /mnt/pool1/network_traffic/scripts/dashboard_app.py
+Restart=always
+RestartSec=5
+User=truenas_admin
+
+[Install]
+WantedBy=multi-user.target
