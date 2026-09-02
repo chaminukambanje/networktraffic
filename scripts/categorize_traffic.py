@@ -3,7 +3,7 @@
 Subnet Traffic Categorizer and Flow Analyzer
 Autonomous pure-Python binary PCAP parser decoding Ethernet, 802.1Q VLAN,
 IPv4, IPv6, TCP, UDP, ICMP, DNS, performing Reverse DNS Hostname Resolution,
-and generating per-device logs.
+and maintaining the complete 50-device subnet catalog.
 """
 
 import os
@@ -52,19 +52,58 @@ PORT_MAP = {
 }
 
 KNOWN_HOSTS = {
-    "192.168.0.1": "skysr213.home (Gateway)",
-    "192.168.0.200": "esxi-01.npcsolutions.co.za (ESXi Host)",
-    "192.168.0.47": "truenas.local (TrueNAS Storage)",
-    "192.168.0.218": "docker.npcsolutions.co.uk (Docker Server)",
-    "192.168.0.113": "chaminukas-mbp.home (MacBook Pro)",
-    "192.168.0.171": "epson-printer.home (Epson Printer)",
-    "192.168.0.104": "optiplex-3020m.home (Ubuntu Host)",
-    "192.168.0.44": "iphone.home",
-    "192.168.0.139": "iphone-97.home",
-    "1.1.1.1": "one.one.one.one (Cloudflare DNS)",
-    "1.0.0.1": "one.one.one.one (Cloudflare DNS)",
-    "8.8.8.8": "dns.google",
-    "8.8.4.4": "dns.google"
+    '192.168.0.1': 'skysr213.Home (Default Gateway & Router)',
+    '192.168.0.12': 'SM-R925F.Home (Samsung Galaxy Watch)',
+    '192.168.0.22': 'Mac.Home (Apple Mac Workstation)',
+    '192.168.0.27': 'MacBookPro.Home (Apple MacBook Pro)',
+    '192.168.0.39': 'BC-server.Home (Business Central Server VM)',
+    '192.168.0.44': 'iPhone.Home (Apple iPhone)',
+    '192.168.0.45': 'vphere.Home (VMware vSphere Appliance)',
+    '192.168.0.47': 'truenas.local (TrueNAS SCALE Storage)',
+    '192.168.0.53': 'node-02.Home (Compute Node 02)',
+    '192.168.0.59': 'SKY.Home (Sky Q TV Box)',
+    '192.168.0.60': 'Chami-s-Old-Ultra.Home (Galaxy S24 Ultra)',
+    '192.168.0.81': 'iPhone-10.Home (Apple iPhone)',
+    '192.168.0.92': 'PS5-B75E08 (Sony PlayStation 5)',
+    '192.168.0.99': 'booklore-server.Home (Booklore Server VM)',
+    '192.168.0.104': 'mbanjec-OptiPlex-3020M.Home (Dell OptiPlex Workstation)',
+    '192.168.0.105': 'iPad.Home (Apple iPad)',
+    '192.168.0.109': 'UNICAF-2025-2026.Home (Windows Server 2025 VM)',
+    '192.168.0.113': 'Chaminukas-MBP.Home (Admin MacBook Pro)',
+    '192.168.0.115': 'Watch.Home (Apple Watch)',
+    '192.168.0.124': 'node-03.Home (Compute Node 03)',
+    '192.168.0.125': 'node-05.Home (Compute Node 05)',
+    '192.168.0.126': 'odooo-and-jupyter.Home (Odoo & Jupyter VM)',
+    '192.168.0.131': 'login-01.Home (CentOS 9 Login Node)',
+    '192.168.0.133': 'login-02.Home (CentOS Login Node 02)',
+    '192.168.0.134': 'exch-01.Home (Exchange Mail Server VM)',
+    '192.168.0.135': 'Chami-Home-PC.Home (Desktop PC)',
+    '192.168.0.139': 'iPhone-97.Home (Apple iPhone)',
+    '192.168.0.144': 'TOSHIBA-TV.Home (Toshiba Smart TV)',
+    '192.168.0.145': 'RSLCM02.Home (VMware Lifecycle Manager VM)',
+    '192.168.0.146': 'node-06.Home (Compute Node 06)',
+    '192.168.0.159': 'Galaxy-A32.Home (Samsung Galaxy A32)',
+    '192.168.0.170': 'node-01.Home (Compute Node 01)',
+    '192.168.0.171': 'EPSON691DE7.Home (Epson Network Printer)',
+    '192.168.0.180': 'Galaxy-A05s.Home (Samsung Galaxy A05s)',
+    '192.168.0.183': 'WIN-ULQP7OEENNM.Home (Windows Workstation)',
+    '192.168.0.197': 'RALSPMAC-G92FWQ.Home (Mac Client)',
+    '192.168.0.200': 'esxi-01.npcsolutions.co.za (VMware ESXi Hypervisor)',
+    '192.168.0.202': 'WIN-3L06EEP1J61.Home (Windows Workstation)',
+    '192.168.0.203': 'MacBook-Pro-92.Home (Apple MacBook Pro)',
+    '192.168.0.218': 'docker.npcsolutions.co.uk (Docker Server)',
+    '192.168.0.219': 'docker-02.Home (Docker Secondary Server)',
+    '192.168.0.222': 'DESKTOP-T96SGVI.Home (Windows Desktop PC)',
+    '192.168.0.223': 'exchng-02.Home (Exchange Server 02 VM)',
+    '192.168.0.227': 'node-04.Home (Compute Node 04)',
+    '192.168.0.229': 'mbanjec-OptiPlex-3020M-7.Home (OptiPlex 7)',
+    '192.168.0.234': 'ubuntu-server.Home (Ubuntu Server)',
+    '192.168.0.235': 'ubuntutest.Home (Ubuntu Test VM)',
+    '192.168.0.236': 'ubuntu-server-24.Home (Ubuntu Server 24)',
+    '192.168.0.237': 'sql.Home (SQL Database Server 2022 VM)',
+    '192.168.0.238': 'ubuntu-server-27.Home (Ubuntu Server 27)',
+    '1.1.1.1': 'one.one.one.one (Cloudflare DNS)',
+    '8.8.8.8': 'dns.google'
 }
 
 dns_cache = {}
