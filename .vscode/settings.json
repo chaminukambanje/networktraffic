@@ -1,0 +1,7 @@
+{
+  "terminal.integrated.defaultProfile.osx": "Antigravity Agent (agy)",
+  "files.associations": {
+    "*.pcap": "raw",
+    "services.json": "jsonc"
+  }
+}
