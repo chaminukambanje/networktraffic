@@ -1,0 +1,33 @@
+{
+  "gateway": "192.168.0.1",
+  "subnet_mask": "255.255.255.0",
+  "domain": "home",
+  "reservations": [
+    {"ip": "192.168.0.1", "hostname": "skysr213.home", "mac": "00:90:4c:3f:b0:55", "role": "Default Gateway & DNS Proxy"},
+    {"ip": "192.168.0.27", "hostname": "macbookpro.home", "mac": "86:18:83:0a:fa:f5", "role": "MacBook Pro Secondary Client"},
+    {"ip": "192.168.0.39", "hostname": "bc-server.home", "mac": "00:0c:29:3b:8d:73", "role": "Microsoft Dynamics Business Central VM"},
+    {"ip": "192.168.0.44", "hostname": "iphone.home", "mac": "4a:03:05:55:c8:6d", "role": "iPhone Client"},
+    {"ip": "192.168.0.47", "hostname": "truenas.local", "mac": "00:0c:29:59:60:19", "role": "TrueNAS SCALE ZFS Storage & Ingest Server"},
+    {"ip": "192.168.0.53", "hostname": "node-02.home", "mac": "00:0c:29:5e:0c:b1", "role": "HPC Linux Compute Node 02"},
+    {"ip": "192.168.0.92", "hostname": "ps5-b75e08.home", "mac": "1c:98:c1:d2:20:39", "role": "PlayStation 5 Console"},
+    {"ip": "192.168.0.99", "hostname": "booklore-server.home", "mac": "00:0c:29:e8:fc:2a", "role": "BookLore Application Server VM"},
+    {"ip": "192.168.0.104", "hostname": "mbanjec-optiplex-3020m.home", "mac": "b0:83:fe:9f:f7:a4", "role": "Dell OptiPlex Ubuntu Workstation"},
+    {"ip": "192.168.0.109", "hostname": "unicaf-2025-2026.home", "mac": "00:50:56:95:11:79", "role": "UNICAF MSc CS Windows Server 2025 VM"},
+    {"ip": "192.168.0.113", "hostname": "chaminukas-mbp.home", "mac": "18:65:90:d8:2d:67", "role": "Primary MacBook Pro Admin Station"},
+    {"ip": "192.168.0.124", "hostname": "node-03.home", "mac": "00:0c:29:5f:93:af", "role": "HPC Linux Compute Node 03"},
+    {"ip": "192.168.0.125", "hostname": "node-05.home", "mac": "00:0c:29:9f:75:4f", "role": "HPC Linux Compute Node 05"},
+    {"ip": "192.168.0.131", "hostname": "login-01.home", "mac": "00:0c:29:70:f5:91", "role": "HPC Login / Bastion Node 01"},
+    {"ip": "192.168.0.133", "hostname": "login-02.home", "mac": "00:0c:29:e2:0d:fb", "role": "HPC Login / Bastion Node 02"},
+    {"ip": "192.168.0.139", "hostname": "iphone-97.home", "mac": "22:ab:c0:15:57:7e", "role": "iPhone Mobile Client"},
+    {"ip": "192.168.0.144", "hostname": "toshiba-tv.home", "mac": "90:98:77:a1:23:df", "role": "Toshiba Smart TV"},
+    {"ip": "192.168.0.146", "hostname": "node-06.home", "mac": "00:0c:29:9c:0a:32", "role": "HPC Linux Compute Node 06"},
+    {"ip": "192.168.0.170", "hostname": "node-01.home", "mac": "00:0c:29:42:2f:10", "role": "HPC Linux Compute Node 01"},
+    {"ip": "192.168.0.171", "hostname": "epson691de7.home", "mac": "e0:bb:9e:69:1d:e7", "role": "Epson Network Multi-Function Printer"},
+    {"ip": "192.168.0.197", "hostname": "ralspmac-g92fwq.home", "mac": "04:bf:1b:34:29:98", "role": "Apple Mac Workstation Client"},
+    {"ip": "192.168.0.200", "hostname": "esxi-01.npcsolutions.co.za", "mac": "90:b1:1c:3c:c5:62", "role": "VMware ESXi 8.0.3 Hypervisor Host"},
+    {"ip": "192.168.0.218", "hostname": "docker.npcsolutions.co.uk", "mac": "00:0c:29:af:75:af", "role": "Ubuntu Docker Container Host"},
+    {"ip": "192.168.0.227", "hostname": "node-04.home", "mac": "00:0c:29:2e:09:54", "role": "HPC Linux Compute Node 04"},
+    {"ip": "192.168.0.235", "hostname": "ubuntutest.home", "mac": "00:0c:29:17:d3:49", "role": "Ubuntu Linux Test VM"},
+    {"ip": "192.168.0.237", "hostname": "sql.home", "mac": "00:0c:29:f7:1f:bb", "role": "Microsoft SQL Server 2022 Database VM"}
+  ]
+}

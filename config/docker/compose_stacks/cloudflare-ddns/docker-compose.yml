@@ -1,0 +1,13 @@
+services:
+  cloudflare-ddns:
+    image: favonia/cloudflare-ddns:latest
+    container_name: cloudflare-ddns
+    restart: unless-stopped
+    environment:
+      - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN:-your_cloudflare_api_token_here}
+      - DOMAINS=docker.npcsolutions.co.uk
+      - PROXIED=true
+      - UPDATE_CRON=@every 5m
+      - IP4_PROVIDER=cloudflare.trace
+      - IP6_PROVIDER=cloudflare.trace
+    network_mode: host

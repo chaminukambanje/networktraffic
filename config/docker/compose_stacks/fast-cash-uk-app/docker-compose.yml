@@ -1,0 +1,9 @@
+services:
+  fast-cash-uk:
+    build: .
+    container_name: fast-cash-uk-app
+    restart: unless-stopped
+    ports:
+      - "8098:8098"
+    environment:
+      - FLASK_ENV=production

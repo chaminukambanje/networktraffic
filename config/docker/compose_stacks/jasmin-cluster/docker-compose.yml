@@ -1,0 +1,63 @@
+services:
+  jasmin-portal:
+    build:
+      context: ./portal
+    container_name: jasmin-portal
+    ports:
+      - "8880:8880"
+    restart: unless-stopped
+    networks:
+      - jasmin-net
+    depends_on:
+      - jasmin-cluster-api
+
+  jasmin-cluster-api:
+    build:
+      context: ./api
+    container_name: jasmin-cluster-api
+    ports:
+      - "8881:8881"
+    volumes:
+      - /gws:/gws:ro
+      - /badc:/badc:ro
+      - /neodc:/neodc:ro
+      - /work:/work:rw
+    restart: unless-stopped
+    networks:
+      - jasmin-net
+
+  jasmin-notebooks:
+    build:
+      context: ./notebooks
+    container_name: jasmin-notebooks
+    ports:
+      - "8888:8888"
+    volumes:
+      - /gws:/gws:rw
+      - /badc:/badc:ro
+      - /neodc:/neodc:ro
+      - /work:/work:rw
+      - ./notebooks/user_data:/home/jovyan/work/user_data:rw
+    restart: unless-stopped
+    networks:
+      - jasmin-net
+
+  jasmin-xfer:
+    image: sigoden/dufs:latest
+    container_name: jasmin-xfer
+    command: /srv -A --allow-upload --allow-delete --allow-search
+    ports:
+      - "8882:5000"
+    volumes:
+      - /gws:/srv/gws:rw
+      - /badc:/srv/badc:ro
+      - /neodc:/srv/neodc:ro
+      - /work:/srv/work:rw
+    restart: unless-stopped
+    networks:
+      - jasmin-net
+
+networks:
+  jasmin-net:
+    name: jasmin-net
+    driver: bridge

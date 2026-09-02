@@ -1,0 +1,17 @@
+services:
+  homelab-dashboard:
+    image: nginx:alpine
+    container_name: homelab-dashboard
+    restart: always
+    ports:
+      - "80:80"
+      - "8080:80"
+    volumes:
+      - /home/mbanjec/homelab-portal/index.html:/usr/share/nginx/html/index.html:ro
+      - /home/mbanjec/homelab-portal/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1:80/ || exit 1"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 2s

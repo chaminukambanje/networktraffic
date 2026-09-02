@@ -68,6 +68,7 @@ Enterprise-grade automated network traffic capture, flow inspection, reverse DNS
 ## 📂 Documentation & Configuration Map
 
 ### 1. Documentation Guides (`docs/`)
+* [`docs/DISASTER_RECOVERY.md`](docs/DISASTER_RECOVERY.md): **Bare-Metal Disaster Recovery Runbook** & step-by-step restoration procedures.
 * [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md): Network topology, ESXi vSwitch layer, and ingest architecture.
 * [`docs/DEVICE_INVENTORY.md`](docs/DEVICE_INVENTORY.md): Verified online homelab catalog (26 active devices) and pruned stale list.
 * [`docs/ESXI_CONFIGURATION.md`](docs/ESXI_CONFIGURATION.md): Step-by-step ESXi port mirroring, vSwitch, and vNIC commands.
@@ -75,7 +76,8 @@ Enterprise-grade automated network traffic capture, flow inspection, reverse DNS
 * [`docs/DOCKER_HOMELAB_CONFIG.md`](docs/DOCKER_HOMELAB_CONFIG.md): Docker container stacks, port maps, and homelab portal config.
 * [`docs/DATA_STRUCTURE.md`](docs/DATA_STRUCTURE.md): JSON/CSV log schemas and the **10GB automated retention policy**.
 
-### 2. Live Infrastructure Snapshots (`config/`)
+### 2. Live Infrastructure Snapshots & Compose Stacks (`config/`)
+* **Docker Compose Stacks**: [`config/docker/compose_stacks/`](config/docker/compose_stacks/) (Complete compose files for all 10 services including Wazuh, Guacamole, Jasmin, Monitoring, Portal, WireGuard).
 * **ESXi Host**:
   * [`config/esxi/esxi_system_info.md`](config/esxi/esxi_system_info.md): Hardware, CPU, Memory, Datastores, and physical NICs.
   * [`config/esxi/vswitches.md`](config/esxi/vswitches.md): vSwitch0, vSwitch-Mirror, port groups, and VMkernel interfaces.
@@ -94,3 +96,4 @@ Enterprise-grade automated network traffic capture, flow inspection, reverse DNS
 * [`Dockerfile`](Dockerfile) & [`docker-compose.yml`](docker-compose.yml): Production Docker container deployment.
 * [`systemd/subnet-traffic-monitor.service`](systemd/subnet-traffic-monitor.service): Capture daemon systemd unit.
 * [`systemd/traffic-dashboard.service`](systemd/traffic-dashboard.service): Web dashboard systemd unit.
+

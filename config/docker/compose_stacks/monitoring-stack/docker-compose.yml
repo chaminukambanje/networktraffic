@@ -1,0 +1,122 @@
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./data/prometheus:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports:
+      - "9090:9090"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - monitoring-net
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    ports:
+      - "3002:3000"
+    networks:
+      - monitoring-net
+    depends_on:
+      - prometheus
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--path.rootfs=/rootfs'
+    ports:
+      - "9100:9100"
+    networks:
+      - monitoring-net
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    restart: unless-stopped
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    ports:
+      - "8085:8080"
+    networks:
+      - monitoring-net
+
+  telegraf:
+    image: telegraf:latest
+    container_name: telegraf
+    restart: unless-stopped
+    volumes:
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /sys:/rootfs/sys:ro
+      - /proc:/rootfs/proc:ro
+      - /etc:/rootfs/etc:ro
+    environment:
+      - HOST_PROC=/rootfs/proc
+      - HOST_SYS=/rootfs/sys
+      - HOST_ETC=/rootfs/etc
+    ports:
+      - "9273:9273"
+    networks:
+      - monitoring-net
+
+  esxi-exporter:
+    image: esxi-exporter:latest
+    container_name: esxi-exporter
+    restart: unless-stopped
+    ports:
+      - "9272:9272"
+    networks:
+      - monitoring-net
+
+  network-power-exporter:
+    build:
+      context: ./network-power-exporter
+      dockerfile: Dockerfile
+    image: network-power-exporter:latest
+    container_name: network-power-exporter
+    restart: unless-stopped
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    volumes:
+      - ./power_scan.sh:/app/power_scan.sh:ro
+      - ./power_data.json:/app/power_data.json:ro
+    environment:
+      - EXPORTER_PORT=9275
+      - NET_INTERFACE=ens34
+      - NET_SUBNET=192.168.0.0/24
+      - ROUTER_IP=192.168.0.1
+      - COST_PER_KWH=0.26
+
+networks:
+  monitoring-net:
+    driver: bridge
