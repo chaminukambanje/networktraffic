@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Subnet & Docker Network Traffic Dashboard Web Application
-Serves interactive real-time telemetry, charts, and per-device metrics.
+Serves interactive real-time telemetry, charts, resolved hostnames, and per-device metrics.
 """
 
 import os
@@ -21,7 +21,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subnet & Docker Network Traffic Dashboard</title>
+    <title>Subnet & Docker Network Traffic Telemetry</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
@@ -59,7 +59,7 @@ HTML_CONTENT = """<!DOCTYPE html>
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> LIVE
                         </span>
                     </h1>
-                    <p class="text-xs text-slate-400">ESXi SPAN &bull; TrueNAS ZFS Ingest &bull; Docker Focus</p>
+                    <p class="text-xs text-slate-400">Hostname Resolution &bull; ESXi SPAN &bull; Docker Focus</p>
                 </div>
             </div>
             <div class="flex items-center space-x-4">
@@ -79,17 +79,17 @@ HTML_CONTENT = """<!DOCTYPE html>
             </div>
             <div class="glass-card p-5 rounded-xl border-indigo-500/40 bg-gradient-to-br from-indigo-950/40 to-slate-900/40">
                 <div class="flex items-center justify-between">
-                    <span class="text-xs font-medium text-indigo-300 uppercase tracking-wider">Docker Server (192.168.0.218)</span>
-                    <span class="px-1.5 py-0.5 text-[10px] bg-indigo-500/30 text-indigo-300 rounded font-bold">PRIMARY</span>
+                    <span class="text-xs font-medium text-indigo-300 uppercase tracking-wider">docker.npcsolutions.co.uk</span>
+                    <span class="px-1.5 py-0.5 text-[10px] bg-indigo-500/30 text-indigo-300 rounded font-bold">192.168.0.218</span>
                 </div>
                 <div id="kpiDockerBytes" class="text-2xl font-extrabold text-indigo-300 mt-2">--</div>
                 <div id="kpiDockerPackets" class="text-xs text-indigo-400/80 mt-1">-- packets</div>
             </div>
             <div class="glass-card p-5 rounded-xl">
-                <div class="text-xs font-medium text-slate-400 uppercase tracking-wider">Active Discovered Devices</div>
+                <div class="text-xs font-medium text-slate-400 uppercase tracking-wider">Active Resolved Devices</div>
                 <div id="kpiActiveDevices" class="text-2xl font-extrabold text-white mt-2">--</div>
                 <div class="text-xs text-emerald-400 mt-1 flex items-center gap-1">
-                    <span>&bull;</span> Monitored via SPAN
+                    <span>&bull;</span> Monitored with DNS Lookups
                 </div>
             </div>
             <div class="glass-card p-5 rounded-xl">
@@ -105,9 +105,9 @@ HTML_CONTENT = """<!DOCTYPE html>
                 <div>
                     <h2 class="text-base font-bold text-white flex items-center gap-2">
                         <svg class="w-5 h-5 text-indigo-400" fill="currentColor" viewBox="0 0 24 24"><path d="M13.983 11.078h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.119a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 00.186-.186V3.574a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.186.185.186m0 2.714h2.118a.186.186 0 00.186-.185V6.289a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m-2.953 0h2.118a.186.186 0 00.186-.185V6.289a.186.186 0 00-.186-.185H8.076a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.185m0 2.716h2.118a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186H8.076a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.185m-2.954 0h2.119a.186.186 0 00.185-.185V9.006a.185.185 0 00-.185-.186H5.122a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.185m17.654 1.954c-.61-.397-1.785-.52-2.734-.338-.204-.76-.641-1.397-1.282-1.898-.59-.462-1.334-.73-2.146-.777a.186.186 0 00-.197.185v1.077c0 .102.083.185.185.185.58.035 1.114.232 1.54.569.458.361.765.836.883 1.373a.186.186 0 00.18.146c1.036.033 1.99.23 2.68.563.856.415 1.34 1.02 1.34 1.678 0 1.096-1.385 2.146-3.8 2.502-.27.04-.545.068-.824.085a.186.186 0 00-.174.185v.068a11.95 11.95 0 01-1.043.045c-2.31 0-4.43-.538-6.13-1.554-1.306-.78-2.26-1.815-2.83-2.996a.186.186 0 00-.168-.106H2.122a.186.186 0 00-.185.185c0 3.23 2.66 5.86 5.928 5.86 1.83 0 3.52-.83 4.67-2.16 1.15 1.33 2.84 2.16 4.67 2.16 3.65 0 6.62-2.94 6.62-6.55 0-1.04-.26-2.03-.73-2.895"/></svg>
-                        Docker Server Traffic Breakdown &bull; 192.168.0.218
+                        Docker Server &bull; docker.npcsolutions.co.uk
                     </h2>
-                    <p class="text-xs text-slate-400 mt-0.5">Host: docker.npcsolutions.co.uk &bull; Ubuntu Linux</p>
+                    <p class="text-xs text-slate-400 mt-0.5">IP: 192.168.0.218 &bull; Ubuntu Linux 26.04</p>
                 </div>
                 <div id="dockerBandwidthSummary" class="flex items-center gap-4 text-xs">
                     <div>Sent: <span id="dockerSent" class="font-bold text-slate-200">--</span></div>
@@ -143,7 +143,7 @@ HTML_CONTENT = """<!DOCTYPE html>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- Top Devices Chart -->
             <div class="glass-card p-5 rounded-xl">
-                <h3 class="text-sm font-bold text-slate-200 mb-4">Top Subnet Devices by Volume</h3>
+                <h3 class="text-sm font-bold text-slate-200 mb-4">Top Devices by Volume (Resolved Hostnames)</h3>
                 <div class="h-64">
                     <canvas id="topDevicesChart"></canvas>
                 </div>
@@ -161,20 +161,20 @@ HTML_CONTENT = """<!DOCTYPE html>
         <div class="glass-card rounded-xl overflow-hidden">
             <div class="p-4 border-b border-slate-800 flex flex-col sm:flex-row justify-between sm:items-center gap-3">
                 <div>
-                    <h3 class="text-sm font-bold text-white">All Discovered Subnet Devices</h3>
-                    <p class="text-xs text-slate-400">Real-time packet & byte counters across all IPs</p>
+                    <h3 class="text-sm font-bold text-white">All Discovered Devices & Hostnames</h3>
+                    <p class="text-xs text-slate-400">DNS Resolved Name, IP Address, Traffic Volume, and Active Applications</p>
                 </div>
-                <input type="text" id="deviceFilter" onkeyup="filterDevices()" placeholder="Search IP or Application..." class="px-3 py-1.5 bg-slate-800/80 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500">
+                <input type="text" id="deviceFilter" onkeyup="filterDevices()" placeholder="Search Hostname, IP or App..." class="px-3 py-1.5 bg-slate-800/80 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 w-64">
             </div>
             <div class="overflow-x-auto scrollbar-slim max-h-96">
                 <table class="w-full text-left text-xs text-slate-300">
                     <thead class="text-[11px] uppercase bg-slate-800 text-slate-400 sticky top-0">
                         <tr>
-                            <th class="py-2.5 px-4">Device IP</th>
+                            <th class="py-2.5 px-4">Resolved Hostname / IP</th>
                             <th class="py-2.5 px-4">Total Volume</th>
                             <th class="py-2.5 px-4">Sent / Recv</th>
                             <th class="py-2.5 px-4">Packets</th>
-                            <th class="py-2.5 px-4">Top Applications</th>
+                            <th class="py-2.5 px-4">Applications</th>
                             <th class="py-2.5 px-4">Last Activity</th>
                         </tr>
                     </thead>
@@ -310,7 +310,7 @@ HTML_CONTENT = """<!DOCTYPE html>
             topDevicesChart = new Chart(devCtx, {
                 type: 'bar',
                 data: {
-                    labels: sortedDevices.map(d => d.device_ip),
+                    labels: sortedDevices.map(d => (d.hostname ? d.hostname.split('.')[0] : d.device_ip)),
                     datasets: [{
                         label: 'Total Bytes',
                         data: sortedDevices.map(d => d.total_bytes),
@@ -371,11 +371,13 @@ HTML_CONTENT = """<!DOCTYPE html>
                     topAppBadges = topA.map(a => `<span class="px-1.5 py-0.5 text-[10px] bg-slate-700 text-slate-300 rounded">${a}</span>`).join(' ');
                 }
 
+                const hostDisplay = d.hostname ? `<div class="font-bold text-white">${d.hostname}</div><div class="text-[11px] font-mono text-slate-400">${d.device_ip}</div>` : `<div class="font-mono font-medium text-white">${d.device_ip}</div>`;
+
                 html += `<tr class="hover:bg-slate-800/50 ${isDocker ? 'bg-indigo-950/20' : ''}">
-                    <td class="py-2.5 px-4 font-mono font-medium ${isDocker ? 'text-indigo-400 font-bold' : 'text-white'}">
-                        ${d.device_ip} ${isDocker ? '<span class="ml-1 text-[10px] px-1 bg-indigo-500/30 text-indigo-300 rounded">DOCKER</span>' : ''}
+                    <td class="py-2.5 px-4">
+                        ${hostDisplay} ${isDocker ? '<span class="inline-block mt-0.5 text-[10px] px-1 bg-indigo-500/30 text-indigo-300 rounded font-bold">DOCKER SERVER</span>' : ''}
                     </td>
-                    <td class="py-2.5 px-4 font-bold">${formatBytes(d.total_bytes)}</td>
+                    <td class="py-2.5 px-4 font-bold text-indigo-200">${formatBytes(d.total_bytes)}</td>
                     <td class="py-2.5 px-4 text-slate-400">${formatBytes(sent)} / ${formatBytes(recv)}</td>
                     <td class="py-2.5 px-4 text-slate-400">${(d.total_packets || 0).toLocaleString()}</td>
                     <td class="py-2.5 px-4 flex gap-1 flex-wrap">${topAppBadges || '--'}</td>
@@ -389,8 +391,9 @@ HTML_CONTENT = """<!DOCTYPE html>
             const query = document.getElementById('deviceFilter').value.toLowerCase();
             const filtered = allDevicesCache.filter(d => {
                 const ipMatch = d.device_ip.toLowerCase().includes(query);
+                const hostMatch = d.hostname && d.hostname.toLowerCase().includes(query);
                 const appMatch = d.applications && Object.keys(d.applications).some(a => a.toLowerCase().includes(query));
-                return ipMatch || appMatch;
+                return ipMatch || hostMatch || appMatch;
             });
             renderDevicesTable(filtered);
         }

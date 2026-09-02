@@ -2,7 +2,8 @@
 """
 Subnet Traffic Categorizer and Flow Analyzer
 Autonomous pure-Python binary PCAP parser decoding Ethernet, 802.1Q VLAN,
-IPv4, IPv6, TCP, UDP, ICMP, DNS, and generating per-device logs.
+IPv4, IPv6, TCP, UDP, ICMP, DNS, performing Reverse DNS Hostname Resolution,
+and generating per-device logs.
 """
 
 import os
@@ -20,6 +21,7 @@ BASE_DIR = "/mnt/pool1/network_traffic"
 DEVICES_DIR = os.path.join(BASE_DIR, "devices")
 RAW_DIR = os.path.join(BASE_DIR, "raw_pcaps")
 LOGS_DIR = os.path.join(BASE_DIR, "logs")
+DNS_CACHE_FILE = os.path.join(BASE_DIR, "dns_cache.json")
 
 PORT_MAP = {
     53: "DNS",
@@ -48,6 +50,53 @@ PORT_MAP = {
     9000: "Portainer/PHP",
     2049: "NFS"
 }
+
+KNOWN_HOSTS = {
+    "192.168.0.1": "skysr213.home (Gateway)",
+    "192.168.0.200": "esxi-01.npcsolutions.co.za (ESXi Host)",
+    "192.168.0.47": "truenas.local (TrueNAS Storage)",
+    "192.168.0.218": "docker.npcsolutions.co.uk (Docker Server)",
+    "192.168.0.113": "chaminukas-mbp.home (MacBook Pro)",
+    "192.168.0.171": "epson-printer.home (Epson Printer)",
+    "192.168.0.104": "optiplex-3020m.home (Ubuntu Host)",
+    "192.168.0.44": "iphone.home",
+    "192.168.0.139": "iphone-97.home",
+    "1.1.1.1": "one.one.one.one (Cloudflare DNS)",
+    "1.0.0.1": "one.one.one.one (Cloudflare DNS)",
+    "8.8.8.8": "dns.google",
+    "8.8.4.4": "dns.google"
+}
+
+dns_cache = {}
+if os.path.isfile(DNS_CACHE_FILE):
+    try:
+        with open(DNS_CACHE_FILE, 'r') as f:
+            dns_cache = json.load(f)
+    except Exception:
+        dns_cache = {}
+
+def resolve_ip(ip):
+    if not ip or ip in ("0.0.0.0", "255.255.255.255", "::"):
+        return ""
+    if ip in KNOWN_HOSTS:
+        return KNOWN_HOSTS[ip]
+    if ip in dns_cache:
+        return dns_cache[ip]
+    try:
+        socket.setdefaulttimeout(0.3)
+        name = socket.gethostbyaddr(ip)[0]
+        dns_cache[ip] = name
+        return name
+    except Exception:
+        dns_cache[ip] = ""
+        return ""
+
+def save_dns_cache():
+    try:
+        with open(DNS_CACHE_FILE, 'w') as f:
+            json.dump(dns_cache, f, indent=2)
+    except Exception:
+        pass
 
 def parse_pcap(filepath):
     flows = defaultdict(lambda: {
@@ -192,6 +241,7 @@ def update_device_records(flows, pcap_name):
         device_map[ip][app] = metrics
         
     for ip, app_dict in device_map.items():
+        hostname = resolve_ip(ip)
         dev_dir = os.path.join(DEVICES_DIR, ip.replace(':', '_'))
         os.makedirs(dev_dir, exist_ok=True)
         
@@ -201,13 +251,13 @@ def update_device_records(flows, pcap_name):
         with open(log_csv, 'a', newline='') as f:
             w = csv.writer(f)
             if not file_exists:
-                w.writerow(["Timestamp", "Device_IP", "Application", "Duration_Sec", 
+                w.writerow(["Timestamp", "Device_IP", "Hostname", "Application", "Duration_Sec", 
                             "Bytes_Sent", "Bytes_Recv", "Total_Bytes", 
                             "Packets_Sent", "Packets_Recv", "Total_Packets", "Unique_Peers"])
             for app, m in app_dict.items():
                 dur = round(m['last_seen'] - m['first_seen'], 3) if m['first_seen'] else 0
                 w.writerow([
-                    timestamp_str, ip, app, dur,
+                    timestamp_str, ip, hostname, app, dur,
                     m['bytes_sent'], m['bytes_recv'], m['bytes_sent'] + m['bytes_recv'],
                     m['pkts_sent'], m['pkts_recv'], m['pkts_sent'] + m['pkts_recv'],
                     len(m['peers'])
@@ -226,12 +276,14 @@ def update_device_records(flows, pcap_name):
         if 'applications' not in existing_summary:
             existing_summary = {
                 'device_ip': ip,
+                'hostname': hostname,
                 'last_updated': timestamp_str,
                 'total_bytes': 0,
                 'total_packets': 0,
                 'applications': {}
             }
             
+        existing_summary['hostname'] = hostname or existing_summary.get('hostname', '')
         existing_summary['last_updated'] = timestamp_str
         for app, m in app_dict.items():
             if app not in existing_summary['applications']:
@@ -265,6 +317,8 @@ def update_device_records(flows, pcap_name):
             w.writerow(["Timestamp", "PCAP_File", "Active_Devices_Count", "Total_Flows", "Total_Bytes"])
         total_b = sum(m['bytes_sent'] for m in flows.values())
         w.writerow([timestamp_str, os.path.basename(pcap_name), len(device_map), len(flows), total_b])
+
+    save_dns_cache()
 
 def main():
     pcaps = sorted(glob.glob(os.path.join(RAW_DIR, "*.pcap")))
