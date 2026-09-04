@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     environment:
       - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN:-your_cloudflare_api_token_here}
-      - DOMAINS=docker.npcsolutions.co.uk
+      - DOMAINS=docker.npcsolutions.co.uk,esxi-01.npcsolutions.co.za
       - PROXIED=true
       - UPDATE_CRON=@every 5m
       - IP4_PROVIDER=cloudflare.trace
