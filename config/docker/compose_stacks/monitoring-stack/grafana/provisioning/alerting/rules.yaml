@@ -1,0 +1,325 @@
+apiVersion: 1
+
+groups:
+  - orgId: 1
+    name: "Hardware & Storage Alerts"
+    folder: "Infrastructure Alerts"
+    interval: 30s
+    rules:
+      - uid: hw-sensor-alert
+        title: "Physical Hardware Sensor Degraded or Failed"
+        condition: "C"
+        for: 30s
+        noDataState: "OK"
+        execErrState: "Error"
+        data:
+          - refId: "A"
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: "PBFA97CFB590B2093"
+            model:
+              editorMode: "code"
+              expr: "min(esxi_hardware_sensor_health)"
+              instant: true
+              range: false
+              refId: "A"
+          - refId: "C"
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: "__expr__"
+            model:
+              conditions:
+                - evaluator:
+                    params: [1]
+                    type: "lt"
+                  operator:
+                    type: "and"
+                  query:
+                    params: ["A"]
+                  reducer:
+                    params: []
+                    type: "last"
+                  type: "query"
+              datasource:
+                name: "Expression"
+                type: "__expr__"
+                uid: "__expr__"
+              expression: "A"
+              reducer: "last"
+              refId: "C"
+              type: "threshold"
+        labels:
+          severity: "critical"
+          category: "hardware"
+        annotations:
+          summary: "Physical Hardware Sensor Fault Detected"
+          description: "One or more physical chassis sensors (power supplies, memory ECC, CPU, system board) reported a degraded or failed status on the ESXi host."
+
+      - uid: raid-storage-alert
+        title: "RAID Virtual Disk Degraded or Impending Failure"
+        condition: "C"
+        for: 30s
+        noDataState: "OK"
+        execErrState: "Error"
+        data:
+          - refId: "A"
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: "PBFA97CFB590B2093"
+            model:
+              editorMode: "code"
+              expr: "min(esxi_hardware_storage_state)"
+              instant: true
+              range: false
+              refId: "A"
+          - refId: "C"
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: "__expr__"
+            model:
+              conditions:
+                - evaluator:
+                    params: [1]
+                    type: "lt"
+                  operator:
+                    type: "and"
+                  query:
+                    params: ["A"]
+                  reducer:
+                    params: []
+                    type: "last"
+                  type: "query"
+              datasource:
+                name: "Expression"
+                type: "__expr__"
+                uid: "__expr__"
+              expression: "A"
+              reducer: "last"
+              refId: "C"
+              type: "threshold"
+        labels:
+          severity: "critical"
+          category: "storage"
+        annotations:
+          summary: "PERC RAID Storage Virtual Disk Degraded"
+          description: "A virtual disk or physical drive in the Dell PERC RAID array has degraded, gone offline, or is experiencing impending mechanical failure."
+
+      - uid: cpu-overheat-alert
+        title: "Critical CPU Overheating (> 82°C)"
+        condition: "C"
+        for: 1m
+        noDataState: "OK"
+        execErrState: "Error"
+        data:
+          - refId: "A"
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: "PBFA97CFB590B2093"
+            model:
+              editorMode: "code"
+              expr: 'max(esxi_hardware_temperature_celsius{name=~".*Processor.*"})'
+              instant: true
+              range: false
+              refId: "A"
+          - refId: "C"
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: "__expr__"
+            model:
+              conditions:
+                - evaluator:
+                    params: [82]
+                    type: "gt"
+                  operator:
+                    type: "and"
+                  query:
+                    params: ["A"]
+                  reducer:
+                    params: []
+                    type: "last"
+                  type: "query"
+              datasource:
+                name: "Expression"
+                type: "__expr__"
+                uid: "__expr__"
+              expression: "A"
+              reducer: "last"
+              refId: "C"
+              type: "threshold"
+        labels:
+          severity: "critical"
+          category: "temperature"
+        annotations:
+          summary: "Critical Host CPU Overheating"
+          description: "Processor core temperature has exceeded 82°C! Thermal throttling or emergency shutdown imminent."
+
+      - uid: datastore-full-alert
+        title: "Critical Datastore Storage Depletion (> 90%)"
+        condition: "C"
+        for: 2m
+        noDataState: "OK"
+        execErrState: "Error"
+        data:
+          - refId: "A"
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: "PBFA97CFB590B2093"
+            model:
+              editorMode: "code"
+              expr: "max(esxi_datastore_usage_percent)"
+              instant: true
+              range: false
+              refId: "A"
+          - refId: "C"
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: "__expr__"
+            model:
+              conditions:
+                - evaluator:
+                    params: [90]
+                    type: "gt"
+                  operator:
+                    type: "and"
+                  query:
+                    params: ["A"]
+                  reducer:
+                    params: []
+                    type: "last"
+                  type: "query"
+              datasource:
+                name: "Expression"
+                type: "__expr__"
+                uid: "__expr__"
+              expression: "A"
+              reducer: "last"
+              refId: "C"
+              type: "threshold"
+        labels:
+          severity: "critical"
+          category: "storage"
+        annotations:
+          summary: "ESXi Datastore Storage Near Exhaustion"
+          description: "Datastore capacity has exceeded 90% utilization! Risk of VM pausing and disk corruption."
+
+      - uid: fan-failure-alert
+        title: "Cooling Fan Failure (< 1200 RPM)"
+        condition: "C"
+        for: 1m
+        noDataState: "OK"
+        execErrState: "Error"
+        data:
+          - refId: "A"
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: "PBFA97CFB590B2093"
+            model:
+              editorMode: "code"
+              expr: 'min(esxi_hardware_fan_rpm{name=~".*Fan[0-9].*"})'
+              instant: true
+              range: false
+              refId: "A"
+          - refId: "C"
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: "__expr__"
+            model:
+              conditions:
+                - evaluator:
+                    params: [1200]
+                    type: "lt"
+                  operator:
+                    type: "and"
+                  query:
+                    params: ["A"]
+                  reducer:
+                    params: []
+                    type: "last"
+                  type: "query"
+              datasource:
+                name: "Expression"
+                type: "__expr__"
+                uid: "__expr__"
+              expression: "A"
+              reducer: "last"
+              refId: "C"
+              type: "threshold"
+        labels:
+          severity: "critical"
+          category: "cooling"
+        annotations:
+          summary: "Server Cooling Fan Failure Detected"
+          description: "One or more cooling fan tachometers reported RPM below the 1200 RPM threshold while host is active."
+
+      - uid: host-disk-full-alert
+        title: "Host Root Filesystem Near Full (> 90%)"
+        condition: "C"
+        for: 2m
+        noDataState: "OK"
+        execErrState: "Error"
+        data:
+          - refId: "A"
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: "PBFA97CFB590B2093"
+            model:
+              editorMode: "code"
+              expr: '100 - ((node_filesystem_avail_bytes{mountpoint="/"} * 100) / node_filesystem_size_bytes{mountpoint="/"})'
+              instant: true
+              range: false
+              refId: "A"
+          - refId: "C"
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: "__expr__"
+            model:
+              conditions:
+                - evaluator:
+                    params: [90]
+                    type: "gt"
+                  operator:
+                    type: "and"
+                  query:
+                    params: ["A"]
+                  reducer:
+                    params: []
+                    type: "last"
+                  type: "query"
+              datasource:
+                name: "Expression"
+                type: "__expr__"
+                uid: "__expr__"
+              expression: "A"
+              reducer: "last"
+              refId: "C"
+              type: "threshold"
+        labels:
+          severity: "critical"
+          category: "storage"
+        annotations:
+          summary: "Docker Host Root Filesystem Space Critical"
+          description: "Linux application host root filesystem usage has exceeded 90%. System disk failure/out of space imminent."

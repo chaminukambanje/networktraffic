@@ -1,0 +1,62 @@
+groups:
+  - name: hardware_storage_alerts
+    rules:
+      - alert: PhysicalHardwareSensorDegradedOrFailed
+        expr: min(esxi_hardware_sensor_health) < 1
+        for: 30s
+        labels:
+          severity: critical
+          category: hardware
+        annotations:
+          summary: "Physical Hardware Sensor Fault Detected"
+          description: "One or more physical sensors, memory modules, or power supplies reported degraded/failed on ESXi."
+
+      - alert: RAIDVirtualDiskDegradedOrFailed
+        expr: min(esxi_hardware_storage_state) < 1
+        for: 30s
+        labels:
+          severity: critical
+          category: storage
+        annotations:
+          summary: "PERC RAID Storage Virtual Disk Degraded"
+          description: "A virtual disk or physical drive in the Dell PERC RAID array has degraded or gone offline."
+
+      - alert: CriticalCPUOverheating
+        expr: max(esxi_hardware_temperature_celsius{name=~".*Processor.*"}) > 82
+        for: 1m
+        labels:
+          severity: critical
+          category: temperature
+        annotations:
+          summary: "Critical Host CPU Overheating (> 82°C)"
+          description: "Processor temperature has exceeded 82°C! Thermal throttling or emergency shutdown imminent."
+
+      - alert: CriticalDatastoreStorageDepletion
+        expr: max(esxi_datastore_usage_percent) > 90
+        for: 2m
+        labels:
+          severity: critical
+          category: storage
+        annotations:
+          summary: "ESXi Datastore Storage Near Exhaustion (> 90%)"
+          description: "Datastore capacity has exceeded 90% utilization! Risk of VM pausing and corruption."
+
+      - alert: CoolingFanFailure
+        expr: min(esxi_hardware_fan_rpm{name=~".*Fan[0-9].*"}) < 1200
+        for: 1m
+        labels:
+          severity: critical
+          category: cooling
+        annotations:
+          summary: "Server Cooling Fan Failure Detected (< 1200 RPM)"
+          description: "One or more cooling fan tachometers reported RPM below 1200 RPM while host is active."
+
+      - alert: HostRootFilesystemNearFull
+        expr: (100 - ((node_filesystem_avail_bytes{mountpoint="/"} * 100) / node_filesystem_size_bytes{mountpoint="/"})) > 90
+        for: 2m
+        labels:
+          severity: critical
+          category: storage
+        annotations:
+          summary: "Docker Host Root Filesystem Space Critical (> 90%)"
+          description: "Linux application host root filesystem usage has exceeded 90%."

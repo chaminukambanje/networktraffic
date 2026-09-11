@@ -1,0 +1,20 @@
+apiVersion: 1
+
+contactPoints:
+  - orgId: 1
+    name: WhatsApp Emergency Dispatch
+    receivers:
+      - uid: whatsapp-emergency-dispatch
+        type: webhook
+        disableResolveMessage: false
+        settings:
+          url: http://whatsapp-alert-bridge:9097/webhook
+          httpMethod: POST
+
+policies:
+  - orgId: 1
+    receiver: WhatsApp Emergency Dispatch
+    group_by: ['alertname', 'severity']
+    group_wait: 10s
+    group_interval: 1m
+    repeat_interval: 30m

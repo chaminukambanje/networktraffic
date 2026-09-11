@@ -5,6 +5,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./alert_rules.yml:/etc/prometheus/alert_rules.yml:ro
       - ./data/prometheus:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -91,8 +92,24 @@ services:
     image: esxi-exporter:latest
     container_name: esxi-exporter
     restart: unless-stopped
+    volumes:
+      - ./esxi-exporter/exporter.py:/app/exporter.py:ro
     ports:
       - "9272:9272"
+    networks:
+      - monitoring-net
+
+  whatsapp-alert-bridge:
+    image: esxi-exporter:latest
+    container_name: whatsapp-alert-bridge
+    restart: unless-stopped
+    command: ["python", "/app/alert_bridge.py"]
+    volumes:
+      - ./alert-bridge:/app:ro
+    ports:
+      - "9097:9097"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       - monitoring-net
 
