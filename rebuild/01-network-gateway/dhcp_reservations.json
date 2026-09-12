@@ -27,7 +27,7 @@
     {"ip": "192.168.0.200", "hostname": "esxi-01.npcsolutions.co.za", "mac": "90:b1:1c:3c:c5:62", "role": "VMware ESXi 8.0.3 Hypervisor Host"},
     {"ip": "192.168.0.218", "hostname": "docker.npcsolutions.co.uk", "mac": "00:0c:29:af:75:af", "role": "Ubuntu Docker Container Host"},
     {"ip": "192.168.0.227", "hostname": "node-04.home", "mac": "00:0c:29:2e:09:54", "role": "HPC Linux Compute Node 04"},
-    {"ip": "192.168.0.235", "hostname": "ubuntutest.home", "mac": "00:0c:29:17:d3:49", "role": "Ubuntu Linux Test VM"},
+    {"ip": "192.168.0.235", "hostname": "ai-cortex-01.home", "mac": "00:0c:29:17:d3:49", "role": "AI LLM Inference & AGY Grounding Node"},
     {"ip": "192.168.0.237", "hostname": "sql.home", "mac": "00:0c:29:f7:1f:bb", "role": "Microsoft SQL Server 2022 Database VM"}
   ]
 }

@@ -33,9 +33,10 @@ Verified active hosts, virtual machines, gaming consoles, mobile clients, and in
 | `192.168.0.197` | **`RALSPMAC-G92FWQ.Home`** | Apple Mac Workstation Client | `ONLINE` (ICMP Echo) |
 | `192.168.0.200` | **`esxi-01.npcsolutions.co.za`** | VMware ESXi 8.0.3 Hypervisor Host | `ONLINE` (ICMP Echo) |
 | `192.168.0.218` | **`docker.npcsolutions.co.uk`** | Ubuntu Docker Application Host | `ONLINE` (ICMP Echo) |
+| `192.168.0.222` | **`Munashe-PC.Home`** | Windows 11 Enterprise Workstation | `ONLINE` (ICMP Echo / Exporter) |
 | `192.168.0.227` | **`node-04.Home`** | Rocky Linux Compute Node 04 | `ONLINE` (ICMP Echo) |
 | `192.168.0.229` | **`mbanjec-OptiPlex-3020M-7.Home`**| Dell OptiPlex Node 7 | `ONLINE` (ARP / Active Flow) |
-| `192.168.0.235` | **`ubuntutest.Home`** | Ubuntu Linux Test Environment VM | `ONLINE` (ICMP Echo) |
+| `192.168.0.235` | **`ai-cortex-01.Home`** | AI LLM Cortex & Grounded Inference Node | `ONLINE` (ICMP Echo) |
 | `192.168.0.237` | **`sql.Home`** | Microsoft SQL Database Server 2022 VM | `ONLINE` (ARP / Active Flow) |
 
 ---
@@ -60,7 +61,6 @@ The following IP addresses were identified as stale DHCP leases, dormant devices
 * `192.168.0.202` (WIN-3L06EEP1J61)
 * `192.168.0.203` (MacBook-Pro-92)
 * `192.168.0.219` (docker-02)
-* `192.168.0.222` (DESKTOP-T96SGVI)
 * `192.168.0.223` (exchng-02)
 * `192.168.0.234` (ubuntu-server)
 * `192.168.0.236` (ubuntu-server-24)

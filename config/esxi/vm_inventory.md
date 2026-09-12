@@ -6,7 +6,7 @@ Vmid            Name                                           File             
 103    001_login-01              [datastore3] 001_login-01/001_login-01.vmx                         centos9_64Guest              vmx-18                                   
 106    001_node-01               [datastore3] 001_node-01/001_node-01.vmx                           centos9_64Guest              vmx-18                                   
 107    Docker                    [datastore3] Docker/Docker.vmx                                     ubuntu64Guest                vmx-21                                   
-108    ubuntu_test               [datastore3] ubuntu_test/ubuntu_test.vmx                           ubuntu64Guest                vmx-21                                   
+108    006_ai-cortex-01          [datastore3] ubuntu_test/ubuntu_test.vmx                           ubuntu64Guest                vmx-21                                   
 109    005_DC-01                 [datastore3] DC-01/DC-01.vmx                                       windows2022srvNext_64Guest   vmx-21                                   
 110    00_UNICAF-2025-2026       [datastore2] windows-home-use/windows-home-use.vmx                 windows2022srvNext_64Guest   vmx-20                                   
 6      001_node-03               [datastore1] node-03/node-03.vmx                                   centos9_64Guest              vmx-21                                   

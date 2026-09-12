@@ -161,7 +161,7 @@ Use [`config/esxi/vm_inventory.md`](../config/esxi/vm_inventory.md) and [`docs/D
 | **`login-01` / `login-02`**| CentOS 9 Stream | 4 | 16 GB | `192.168.0.131` / `.133` | Slurm HPC Cluster Login Gateways |
 | **`node-01` to `node-06`** | CentOS 9 / Rocky Linux | 8 | 32 GB | `192.168.0.170`, `.53`, `.124`, `.227`, `.125`, `.146` | HPC Cluster Compute Nodes |
 | **`booklore-server`** | CentOS 8 | 4 | 8 GB | `192.168.0.99` | Booklore Production Application |
-| **`ubuntutest`** | Ubuntu 24.04 | 2 | 4 GB | `192.168.0.235` | Testing Environment VM |
+| **`ai-cortex-01`** | Ubuntu 24.04 | 4 | 16 GB | `192.168.0.235` | AI LLM Inference & AGY Grounding Node |
 
 ---
 
