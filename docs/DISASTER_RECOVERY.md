@@ -12,8 +12,38 @@ Comprehensive step-by-step technical procedures to rebuild the entire homelab in
 | **ESXi Virtual Switching & SPAN** | ✅ **100% YES** | Declarative `esxcli` scripts restore `vSwitch0`, `vSwitch-Mirror`, port groups & VLAN 4095 |
 | **TrueNAS Capture & Ingest Pipeline** | ✅ **100% YES** | Automated unnumbered vNIC setup, directory hierarchy & 10GB retention engine |
 | **Docker Application Stacks (20+ Apps)**| ✅ **100% YES** | 10 Compose stacks (`config/docker/compose_stacks/`) rebuild all containers in minutes |
-| **Homelab Services Portal** | ✅ **100% YES** | Pre-configured `services.json` and Nginx reverse proxy configuration |
+| **Secrets, Passwords & SSH Keys Vault** | ✅ **100% YES** | Encrypted multi-tier SecureVault (`~/SecureVault`, TrueNAS, AI Cortex, Docker, ESXi) |
 | **VM Operating Systems & Data (VMDKs)** | ⚠️ **PARTIAL** | VM hardware specs & network maps are documented; requires OS install or VMDK backups |
+
+---
+
+## 🔐 Phase 0: SecureVault Credential & SSH Key Recovery
+
+Before reconstructing VMs or hypervisors, retrieve the encrypted `SecureVault` archive from any of the redundant hardware storage locations:
+
+1. **Vault Backup Locations:**
+   * **Local Workstation:** `~/SecureVault/backups/secure_vault_backup_latest.tar.enc`
+   * **TrueNAS ZFS Storage:** `192.168.0.47:/mnt/pool1/share02/secure_vault/`
+   * **AI Cortex Dedicated Disk:** `192.168.0.235:/opt/ai-cortex/secure_vault/`
+   * **Docker Application Host:** `192.168.0.218:/home/mbanjec/.secure_vault/`
+   * **ESXi Bare-Metal Datastore:** `192.168.0.200:/vmfs/volumes/datastore3/secure_vault/`
+
+2. **Emergency Decryption on Any Workstation:**
+   ```bash
+   openssl enc -d -aes-256-cbc -pbkdf2 -iter 600000 \
+     -in secure_vault_backup_latest.tar.enc \
+     -out secure_vault_restored.tar.gz
+   tar -xzf secure_vault_restored.tar.gz
+   ```
+
+3. **Restoring Workstation SSH Keys:**
+   ```bash
+   mkdir -p ~/.ssh && chmod 700 ~/.ssh
+   cp ssh/id_* ~/.ssh/ && chmod 600 ~/.ssh/id_*
+   cp ssh/config ~/.ssh/ && chmod 600 ~/.ssh/config
+   cp ssh/authorized_keys ~/.ssh/ && chmod 600 ~/.ssh/authorized_keys
+   cp ssh/*.pub ~/.ssh/ && chmod 644 ~/.ssh/*.pub
+   ```
 
 ---
 
