@@ -18,3 +18,26 @@ Vmid            Name                                           File             
 90     005_sql                   [datastore3] sql/sql.vmx                                           windows2022srvNext_64Guest   vmx-21                                   
 91     005_DC-02                 [datastore3] DC-02/DC-02.vmx                                       windows2022srvNext_64Guest   vmx-21
 ```
+
+## Active Hardware & vCPU Reallocations
+
+| VM ID | Virtual Machine Name | Role / Subsystem | vCPUs | RAM (MB) | Datastore | Power State |
+| :---: | :--- | :--- | :---: | :---: | :--- | :---: |
+| **106** | `001_node-01` | Slurm HPC Compute Node 01 | **14** | 16,384 | datastore3 | Powered On |
+| **86**  | `001_node-02` | Slurm HPC Compute Node 02 | **10** | 8,192  | datastore3 | Powered On |
+| **6**   | `001_node-03` | Slurm HPC Compute Node 03 | **14** | 16,384 | datastore1 | Powered On |
+| **87**  | `001_node-04` | Slurm HPC Compute Node 04 | **8**  | 8,192  | datastore3 | Powered On |
+| **103** | `001_login-01` | Slurm Head / Bastion Node | **8**  | 16,384 | datastore3 | Powered On |
+| **108** | `006_ai-cortex-01` | Private AI Inference Server | **16** | 44,032 | datastore3 | Powered On |
+| **107** | `Docker` | Docker App & Monitoring Host | **12** | 65,536 | datastore3 | Powered On |
+| **76**  | `003_truenas` | TrueNAS SCALE Storage & Mirror | **8**  | 16,384 | datastore1 | Powered On |
+| **82**  | `003_Booklore` | Booklore & Personal Library | **10** | 16,384 | datastore1 | Powered On |
+| **109** | `005_DC-01` | Active Directory Domain Controller | **2**  | 16,384 | datastore3 | Powered On |
+| **91**  | `005_DC-02` | Secondary Domain Controller | **2**  | 8,192  | datastore3 | Powered On |
+| **89**  | `005_BC-server` | Dynamics 365 Business Central | **2**  | 24,576 | datastore3 | Powered On |
+| **90**  | `005_sql` | Microsoft SQL Server 2022 | **2**  | 16,384 | datastore3 | Powered On |
+| **110** | `00_UNICAF-2025-2026` | UNICAF MSc Academic Server | **2**  | 16,384 | datastore2 | Powered On |
+| **101** | `VMware vCenter Server 8` | vCSA Management Appliance | **8**  | 30,720 | datastore3 | Powered On |
+
+* **Total Slurm Compute Cluster Capacity:** **46 vCPUs** across 4 compute nodes.
+* **Elastic Autoscaler:** Integrated with VMware vCenter Server 8 (`https://192.168.0.146`) for dynamic burst node provisioning (`node-05`) and CPU/RAM hot-adding.

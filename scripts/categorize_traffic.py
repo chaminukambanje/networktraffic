@@ -93,7 +93,7 @@ KNOWN_HOSTS = {
     '192.168.0.203': 'MacBook-Pro-92.Home (Apple MacBook Pro)',
     '192.168.0.218': 'docker.npcsolutions.co.uk (Docker Server)',
     '192.168.0.219': 'docker-02.Home (Docker Secondary Server)',
-    '192.168.0.222': 'DESKTOP-T96SGVI.Home (Windows Desktop PC)',
+    '192.168.0.222': 'Munashe-PC.Home (Munashe Windows 11 Workstation)',
     '192.168.0.223': 'exchng-02.Home (Exchange Server 02 VM)',
     '192.168.0.227': 'node-04.Home (Compute Node 04)',
     '192.168.0.229': 'mbanjec-OptiPlex-3020M-7.Home (OptiPlex 7)',
