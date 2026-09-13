@@ -1,3 +1,4 @@
+import os
 import ssl
 import time
 import logging
@@ -8,9 +9,9 @@ from prometheus_client import CollectorRegistry, Gauge, generate_latest
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
-ESXI_HOST = "192.168.0.200"
-ESXI_USER = "root"
-ESXI_PASS = "Munashe1234@"
+ESXI_HOST = os.environ.get("ESXI_HOST", "192.168.0.200")
+ESXI_USER = os.environ.get("ESXI_USER", "root")
+ESXI_PASS = os.environ.get("ESXI_PASS", "")
 PORT = 9272
 
 class ESXiCollector:
